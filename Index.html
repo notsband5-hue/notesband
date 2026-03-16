@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نوتس باند | Notes Band</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Tajawal for Arabic, Outfit for English -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#C6A25A',
+                        lightSand: '#E8D6A8',
+                        darkBrown: '#4A3324',
+                        turquoise: '#29B6B6',
+                        softBeige: '#F5EFE4',
+                        darkBg: '#18120F',
+                        darkCard: '#241B16'
+                    },
+                    fontFamily: {
+                        arabic: ['Tajawal', 'sans-serif'],
+                        english: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styles */
+        body {
+            background-color: #F5EFE4;
+            color: #4A3324;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark {
+            background-color: #18120F;
+            color: #F5EFE4;
+        }
+
+        /* --- Custom Scrollbar Matching Identity --- */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #4A3324;
+        }
+        body.dark ::-webkit-scrollbar-track {
+            background: #18120F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4A3324;
+            border-radius: 6px;
+            border: 3px solid #C6A25A;
+        }
+        body.dark ::-webkit-scrollbar-thumb {
+            border: 3px solid #18120F;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4A3324;
+        }
+        body.dark ::-webkit-scrollbar-thumb:hover {
+            background: #E8D6A8;
+        }
+
+        /* Language Font Switching */
+        html[lang="ar"] body { font-family: 'Tajawal', sans-serif; }
+        html[lang="en"] body { font-family: 'Outfit', sans-serif; }
+
+        /* Strict Language Visibility Logic */
+        html[lang="ar"] .lang-en { display: none !important; }
+        html[lang="en"] .lang-ar { display: none !important; }
+
+        /* Glassmorphism & Navbar Effects */
+        .glass-nav {
+            background: rgba(245, 239, 228, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(198, 162, 90, 0.1);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, box-shadow 0.3s;
+        }
+        body.dark .glass-nav {
+            background: rgba(24, 18, 15, 0.85);
+        }
+
+        /* Scrolled Navbar State */
+        .nav-scrolled {
+            box-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.1);
+            background: rgba(245, 239, 228, 0.98);
+        }
+        body.dark .nav-scrolled {
+            box-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.5);
+            background: rgba(24, 18, 15, 0.98);
+        }
+
+        /* Hidden Navbar State (Smart Exit Effect) */
+        .nav-hidden {
+            transform: translateY(-100%);
+        }
+
+        /* --- Mobile Menu Animation --- */
+        #mobileMenu {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top;
+            opacity: 0;
+            transform: scaleY(0);
+            visibility: hidden;
+            position: absolute;
+        }
+        
+        #mobileMenu.menu-open {
+            opacity: 1;
+            transform: scaleY(1);
+            visibility: visible;
+        }
+
+        /* Hero Overlay */
+        .hero-overlay {
+            background: linear-gradient(to bottom, rgba(74, 51, 36, 0.7), rgba(24, 18, 15, 0.9));
+        }
+
+        /* Card Hover Effects */
+        .hover-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(198, 162, 90, 0.4);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold selection:text-white">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div id="navContainer" class="flex justify-between items-center h-20 transition-all duration-300">
+                
+                <!-- Logo -->
+                <a href="#home" class="flex-shrink-0 flex items-center gap-3">
+                    <img src="image/الشعار.png" alt="Logo" class="h-12 w-auto rounded-full shadow-lg border-2 border-gold transition-all duration-300" id="navLogo" onerror="this.src='https://ui-avatars.com/api/?name=NB&background=4A3324&color=C6A25A&size=1'">
+                    <span class="font-bold text-xl md:text-2xl text-darkBrown dark:text-gold tracking-wide">
+                        <span class="lang-ar">نوتس باند</span>
+                        <span class="lang-en">Notes Band</span>
+                    </span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="#home" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors font-semibold text-lg relative group">
+                        <span class="lang-ar">الرئيسية</span><span class="lang-en">Home</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#about" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors font-semibold text-lg relative group">
+                        <span class="lang-ar">عن الفرقة</span><span class="lang-en">About</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#members" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors font-semibold text-lg relative group">
+                        <span class="lang-ar">الأعضاء</span><span class="lang-en">Members</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#gallery" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors font-semibold text-lg relative group">
+                        <span class="lang-ar">معرض المقطوعات</span><span class="lang-en">Artworks Gallery</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#contact" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors font-semibold text-lg relative group">
+                        <span class="lang-ar">تواصل معنا</span><span class="lang-en">Contact</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all group-hover:w-full"></span>
+                    </a>
+                </div>
+
+                <!-- Controls (Lang & Theme) Desktop -->
+                <div class="hidden lg:flex items-center gap-4">
+                    <button id="langToggle" class="px-3 h-10 rounded-full border border-gold text-gold hover:bg-gold hover:text-white transition-all flex items-center justify-center font-bold">
+                        <span class="lang-ar font-english text-sm tracking-widest">EN</span>
+                        <span class="lang-en font-arabic text-sm">عربي</span>
+                    </button>
+                    <button id="themeToggle" class="w-10 h-10 rounded-full bg-darkBrown text-lightSand dark:bg-lightSand dark:text-darkBrown hover:scale-110 transition-transform flex items-center justify-center shadow-md">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Buttons -->
+                <div class="lg:hidden flex items-center gap-3">
+                    <button id="mobileThemeToggle" class="w-9 h-9 rounded-full bg-darkBrown text-lightSand dark:bg-lightSand dark:text-darkBrown flex items-center justify-center shadow-md">
+                        <i class="fas fa-moon dark:hidden text-sm"></i>
+                        <i class="fas fa-sun hidden dark:block text-sm"></i>
+                    </button>
+                    <button id="mobileLangToggle" class="px-2 h-9 border border-gold text-gold rounded-full font-bold text-sm">
+                        <span class="lang-ar font-english">EN</span>
+                        <span class="lang-en font-arabic">عربي</span>
+                    </button>
+                    <!-- Mobile Menu Trigger -->
+                    <button id="mobileMenuBtn" class="text-darkBrown dark:text-gold text-2xl focus:outline-none ml-2 mr-2 transition-transform duration-300">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown (Animated) -->
+        <div id="mobileMenu" class="lg:hidden bg-softBeige dark:bg-darkBg border-b border-gold border-opacity-20 w-full left-0 shadow-2xl">
+            <div class="flex flex-col px-6 py-8 gap-6 text-center">
+                <a href="#home" class="block text-darkBrown dark:text-lightSand hover:text-gold font-bold text-xl mobile-link transition-colors">
+                    <span class="lang-ar">الرئيسية</span><span class="lang-en">Home</span>
+                </a>
+                <a href="#about" class="block text-darkBrown dark:text-lightSand hover:text-gold font-bold text-xl mobile-link transition-colors">
+                    <span class="lang-ar">عن الفرقة</span><span class="lang-en">About</span>
+                </a>
+                <a href="#members" class="block text-darkBrown dark:text-lightSand hover:text-gold font-bold text-xl mobile-link transition-colors">
+                    <span class="lang-ar">الأعضاء</span><span class="lang-en">Members</span>
+                </a>
+                <a href="#gallery" class="block text-darkBrown dark:text-lightSand hover:text-gold font-bold text-xl mobile-link transition-colors">
+                    <span class="lang-ar">معرض المقطوعات</span><span class="lang-en">Artworks Gallery</span>
+                </a>
+                <a href="#contact" class="block text-darkBrown dark:text-lightSand hover:text-gold font-bold text-xl mobile-link transition-colors">
+                    <span class="lang-ar">تواصل معنا</span><span class="lang-en">Contact</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center text-center pt-20">
+        <!-- Background Image -->
+        <div class="absolute inset-0 w-full h-full">
+            <img src="image/جماعي.png" alt="Music Background" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 hero-overlay"></div>
+        </div>
+        
+        <!-- Content -->
+        <div class="relative z-10 px-4 max-w-4xl mx-auto flex flex-col items-center">
+            
+            <!-- Logo Placeholder (For later use) -->
+            <div class="w-24 h-24 md:w-32 md:h-32 mb-6 rounded-full border-2 border-dashed border-gold flex items-center justify-center text-gold bg-black bg-opacity-20 backdrop-blur-sm shadow-lg">
+                <span class="text-sm font-light opacity-50"><span class="lang-ar"><img src="image/الشعار.png"></span><span class="lang-en"><img src="image/الشعار.png"></span></span>
+            </div>
+            
+            <!-- Mixed Language Band Name (Clean & Elegant) -->
+            <h1 class="text-5xl md:text-7xl font-extrabold text-gold mb-4 drop-shadow-2xl flex flex-col items-center gap-1">
+                <span class="font-arabic">نوتس باند</span>
+                <span class="font-english text-3xl md:text-5xl tracking-widest text-white">NOTES BAND</span>
+            </h1>
+
+            <!-- Mixed Language Subtitle -->
+            <div class="mb-12 flex flex-col items-center gap-1">
+                <h2 class="text-2xl md:text-3xl text-lightSand font-light tracking-wide font-arabic drop-shadow-md">
+                    تجمع موسيقي حضرمي
+                </h2>
+                <h3 class="text-lg md:text-xl text-gray-300 font-light tracking-widest font-english uppercase drop-shadow-md">
+                    Hadrami Music Collective
+                </h3>
+            </div>
+            
+            <!-- Strict Language Buttons -->
+            <div class="flex flex-col sm:flex-row gap-5 justify-center">
+                <a href="#gallery" class="px-8 py-3 bg-gold text-darkBrown font-bold rounded-full hover:bg-white hover:text-gold transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(198,162,90,0.4)] flex items-center justify-center gap-2">
+                    <i class="fas fa-play"></i>
+                    <span class="lang-ar">شاهد المقطوعات</span>
+                    <span class="lang-en">Watch Videos</span>
+                </a>
+                <a href="#about" class="px-8 py-3 bg-transparent text-white font-bold rounded-full border-2 border-gold hover:bg-gold hover:text-darkBrown transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="lang-ar">عن الفرقة</span>
+                    <span class="lang-en">About Us</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce z-10 hidden md:block">
+            <a href="#about" class="text-gold text-3xl hover:text-white transition-colors">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 2. About Section (Centered & Redesigned) -->
+    <section id="about" class="py-24 bg-softBeige dark:bg-darkBg relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-gold opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-turquoise opacity-5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            
+            <!-- Badge -->
+            <div class="flex items-center justify-center gap-3 mb-6">
+                <div class="h-[2px] w-8 bg-turquoise"></div>
+                <h4 class="text-turquoise font-bold uppercase tracking-widest text-sm">
+                    <span class="lang-ar">قصتنا</span>
+                    <span class="lang-en">Our Story</span>
+                </h4>
+                <div class="h-[2px] w-8 bg-turquoise"></div>
+            </div>
+
+            <!-- Title -->
+            <h2 class="text-4xl md:text-5xl font-bold text-darkBrown dark:text-gold mb-8 leading-tight">
+                <span class="lang-ar">عن فرقة <span class="text-gold dark:text-white">نوتس باند</span></span>
+                <span class="lang-en">About <span class="text-gold dark:text-white">Notes Band</span></span>
+            </h2>
+
+            <!-- Text -->
+            <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-6 leading-relaxed max-w-3xl mx-auto">
+                <span class="lang-ar">فرقة "نوتس باند" هي مجموعة شبابية حضرمية موهوبة تقدم مقطوعات موسيقية وغنائية تمزج بين التراث الحضرمي الأصيل والموسيقى الحديثة بأسلوب يمني، وغربي، وشرقي.</span>
+                <span class="lang-en">"Notes Band" is a talented Hadrami youth collective presenting musical and vocal pieces that blend authentic Hadrami heritage with modern music, encompassing Yemeni, Western, and Eastern styles.</span>
+            </p>
+            <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-12 max-w-3xl mx-auto">
+                <span class="lang-ar">نهدف إلى تجديد الفن الحضرمي وإيصاله للعالم برؤية فنية معاصرة تعكس هويتنا وتواكب التطور الموسيقي العالمي.</span>
+                <span class="lang-en">We aim to renew Hadrami art and deliver it to the world with a contemporary artistic vision that reflects our identity and keeps pace with global musical evolution.</span>
+            </p>
+
+            <!-- Stat (Centered) -->
+            <div class="flex justify-center mb-12">
+                <div class="border border-gold border-opacity-30 rounded-3xl px-10 py-5 bg-white dark:bg-darkCard shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-5xl font-extrabold text-darkBrown dark:text-lightSand mb-2">+20</h3>
+                    <p class="text-base text-gray-600 dark:text-gray-400 font-semibold tracking-wide uppercase">
+                        <span class="lang-ar">مقطوعة موسيقية</span><span class="lang-en">Musical Tracks</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Image -->
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-gold group max-w-4xl mx-auto">
+                <img src="image/الصورة الجماعية.png" alt="Notes Band" class="w-full h-[400px] md:h-[500px] object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-darkBrown opacity-10 group-hover:opacity-0 transition-opacity duration-500"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. Members Section -->
+    <section id="members" class="py-24 bg-white dark:bg-darkCard border-t border-gold border-opacity-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-darkBrown dark:text-gold mb-4">
+                    <span class="lang-ar">أعضاء الفرقة</span>
+                    <span class="lang-en">Band Members</span>
+                </h2>
+                <div class="h-1 w-24 bg-gold mx-auto rounded"></div>
+                <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    <span class="lang-ar">تعرف على النجوم الذين يصنعون سحر "نوتس باند".</span>
+                    <span class="lang-en">Meet the stars who create the magic of "Notes Band".</span>
+                </p>
+            </div>
+
+            <!-- Flex layout for 5 members -->
+            <div class="flex flex-wrap justify-center gap-8">
+                
+                <!-- Member 1 -->
+                <div class="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] bg-softBeige dark:bg-darkBg rounded-2xl overflow-hidden hover-card border border-transparent dark:border-gold dark:border-opacity-20 shadow-lg group flex flex-col">
+                    <div class="relative overflow-hidden">
+                        <img src="image/نيازي بن الشيخ ابوبكر.png" alt="Niazi" class="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBrown to-transparent opacity-60"></div>
+                    </div>
+                    <div class="p-6 text-center relative -mt-12 bg-softBeige dark:bg-darkBg rounded-t-3xl flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-darkBrown dark:text-lightSand mb-1">
+                                <span class="lang-ar">نيازي بن الشيخ ابوبكر</span><span class="lang-en">Niazi Bin Al-Sheikh</span>
+                            </h3>
+                            <p class="text-turquoise font-medium mb-3 text-sm tracking-wide uppercase">
+                                <span class="lang-ar">عازف أورج</span><span class="lang-en">Keyboardist</span>
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                                <span class="lang-ar">المايستروا و القائد</span>
+                                <span class="lang-en">The Maestro and the Leader</span>
+                            </p>
+                        </div>
+                        <!-- Social Icons -->
+                        <div class="flex justify-center gap-5 mt-4 pt-4 border-t border-gold border-opacity-20">
+                            <a href="https://www.instagram.com/nyazi_mohammed?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-instagram"></i></a>
+                            <a href="https://wa.me/+967733589162" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member 2 -->
+                <div class="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] bg-softBeige dark:bg-darkBg rounded-2xl overflow-hidden hover-card border border-transparent dark:border-gold dark:border-opacity-20 shadow-lg group flex flex-col">
+                    <div class="relative overflow-hidden">
+                        <img src="image/عمر المضي.png" alt="Omar" class="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBrown to-transparent opacity-60"></div>
+                    </div>
+                    <div class="p-6 text-center relative -mt-12 bg-softBeige dark:bg-darkBg rounded-t-3xl flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-darkBrown dark:text-lightSand mb-1">
+                                <span class="lang-ar">عمر المضي</span><span class="lang-en">Omar Al-Mudi</span>
+                            </h3>
+                            <p class="text-turquoise font-medium mb-3 text-sm tracking-wide uppercase">
+                                <span class="lang-ar">عازف عود</span><span class="lang-en">Oud Player</span>
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                                <span class="lang-ar">موسيقار الفرقة</span>
+                                <span class="lang-en">Band musician</span>
+                            </p>
+                        </div>
+                        <!-- Social Icons -->
+                        <div class="flex justify-center gap-5 mt-4 pt-4 border-t border-gold border-opacity-20">
+                            <a href="https://www.instagram.com/e55ok?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-instagram"></i></a>
+                            <a href="https://wa.me/+967778930846" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member 3 -->
+                <div class="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] bg-softBeige dark:bg-darkBg rounded-2xl overflow-hidden hover-card border border-transparent dark:border-gold dark:border-opacity-20 shadow-lg group flex flex-col">
+                    <div class="relative overflow-hidden">
+                        <img src="image/حمادة بن دهري.png" alt="Hamada" class="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBrown to-transparent opacity-60"></div>
+                    </div>
+                    <div class="p-6 text-center relative -mt-12 bg-softBeige dark:bg-darkBg rounded-t-3xl flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-darkBrown dark:text-lightSand mb-1">
+                                <span class="lang-ar">حمادة بن دهري</span><span class="lang-en">Hamada Bin Dahri</span>
+                            </h3>
+                            <p class="text-turquoise font-medium mb-3 text-sm tracking-wide uppercase">
+                                <span class="lang-ar">عازف أورج</span><span class="lang-en">Keyboardist</span>
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                                <span class="lang-ar">رأس الفكرة لكل مقطوعة</span>
+                                <span class="lang-en">The main idea of ​​each piece</span>
+                            </p>
+                        </div>
+                        <!-- Social Icons -->
+                        <div class="flex justify-center gap-5 mt-4 pt-4 border-t border-gold border-opacity-20">
+                            <a href="https://www.instagram.com/hama7a44?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-instagram"></i></a>
+                            <a href="https://wa.me/+967774963045" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member 4 -->
+                <div class="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] bg-softBeige dark:bg-darkBg rounded-2xl overflow-hidden hover-card border border-transparent dark:border-gold dark:border-opacity-20 shadow-lg group flex flex-col">
+                    <div class="relative overflow-hidden">
+                        <img src="image/مصطفى الحبشي.png" alt="Mustafa" class="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBrown to-transparent opacity-60"></div>
+                    </div>
+                    <div class="p-6 text-center relative -mt-12 bg-softBeige dark:bg-darkBg rounded-t-3xl flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-darkBrown dark:text-lightSand mb-1">
+                                <span class="lang-ar">مصطفى الحبشي</span><span class="lang-en">Mustafa Al-Habshi</span>
+                            </h3>
+                            <p class="text-turquoise font-medium mb-3 text-sm tracking-wide uppercase">
+                                <span class="lang-ar">عازف كمان وجيتار</span><span class="lang-en">Violin & Guitar</span>
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                                <span class="lang-ar">ملك الغربي و ساحر الأوتار</span>
+                                <span class="lang-en">King of the West and Wizard of the Strings</span>
+                            </p>
+                        </div>
+                        <!-- Social Icons -->
+                        <div class="flex justify-center gap-5 mt-4 pt-4 border-t border-gold border-opacity-20">
+                            <a href="https://www.instagram.com/mzss_70?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-instagram"></i></a>
+                            <a href="https://wa.me/+967772442176" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member 5 -->
+                <div class="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] bg-softBeige dark:bg-darkBg rounded-2xl overflow-hidden hover-card border border-transparent dark:border-gold dark:border-opacity-20 shadow-lg group flex flex-col">
+                    <div class="relative overflow-hidden">
+                        <img src="image/محمد السقاف.png" alt="Mohammed" class="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBrown to-transparent opacity-60"></div>
+                    </div>
+                    <div class="p-6 text-center relative -mt-12 bg-softBeige dark:bg-darkBg rounded-t-3xl flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-darkBrown dark:text-lightSand mb-1">
+                                <span class="lang-ar">محمد السقاف</span><span class="lang-en">Mohammed Al-Saqqaf</span>
+                            </h3>
+                            <p class="text-turquoise font-medium mb-3 text-sm tracking-wide uppercase">
+                                <span class="lang-ar">عازف ناي وكلارنيت</span><span class="lang-en">Flute & Clarinet</span>
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                                <span class="lang-ar">صاحب الهنك الحضرمي</span>
+                                <span class="lang-en">The owner of the Hadrami henna</span>
+                            </p>
+                        </div>
+                        <!-- Social Icons -->
+                        <div class="flex justify-center gap-5 mt-4 pt-4 border-t border-gold border-opacity-20">
+                            <a href="https://www.instagram.com/mo_sakaf?igsh=aG55YXk1bXA4bzFj" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-instagram"></i></a>
+                            <a href="https://wa.me/+967770721148" class="text-darkBrown dark:text-lightSand hover:text-gold dark:hover:text-gold transition-colors text-lg"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Gallery & Videos Section -->
+    <section id="gallery" class="py-24 bg-softBeige dark:bg-darkCard border-t border-gold border-opacity-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 relative z-10">
+                <h2 class="text-4xl md:text-5xl font-bold text-darkBrown dark:text-gold mb-4">
+                    <span class="lang-ar">معرض المقطوعات</span>
+                    <span class="lang-en">Artworks Gallery</span>
+                </h2>
+                <div class="h-1 w-24 bg-gold mx-auto rounded"></div>
+                <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    <span class="lang-ar">استكشف مقطوعاتنا الموسيقية ومقتطفات من حفلاتنا. اضغط على أي مقطع لمشاهدته مباشرة.</span>
+                    <span class="lang-en">Explore our musical tracks and concert glimpses. Click on any clip to watch it directly.</span>
+                </p>
+            </div>
+
+            <!-- Video Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 relative z-10">
+                
+                <!-- Video Item 1 -->
+                <a href="https://drive.google.com/file/d/1Mg2B3kqjag19yPXHbnBexsa-ah2Cnwrn/view?usp=drivesdk" target="_blank" class="relative group rounded-xl overflow-hidden shadow-lg aspect-video block bg-black border border-gold border-opacity-30 hover:border-opacity-100 transition-all">
+                    <img src="image/المقطوعات/1.png" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="text-white font-bold text-lg drop-shadow-md">
+                            <span class="lang-ar">مقطوعة إرمام</span>
+                            <span class="lang-en">Iramum's Piece</span>
+                        </h3>
+                    </div>
+                </a>
+
+                <!-- Video Item 2 -->
+                <a href="https://drive.google.com/file/d/1HEPVtaIi0cUst4OoTcpKlnpqE3ErhkvO/view?usp=drivesdk" target="_blank" class="relative group rounded-xl overflow-hidden shadow-lg aspect-video block bg-black border border-gold border-opacity-30 hover:border-opacity-100 transition-all">
+                    <img src="image/المقطوعات/2.png" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 flex items-center justify-center">
+
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="text-white font-bold text-lg drop-shadow-md">
+                            <span class="lang-ar">التايتنك و الدان الحضرمي</span>
+                            <span class="lang-en">Titanic and Dan Hadrami</span>
+                        </h3>
+                    </div>
+                </a>
+
+                <!-- Video Item 3 -->
+                <a href="https://drive.google.com/file/d/1_29dTE9B-UmVenMcNzTf5rmbviEdcgZy/view?usp=drivesdk" target="_blank" class="relative group rounded-xl overflow-hidden shadow-lg aspect-video block bg-black border border-gold border-opacity-30 hover:border-opacity-100 transition-all">
+                    <img src="image/المقطوعات/3.png" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="text-white font-bold text-lg drop-shadow-md">
+                            <span class="lang-ar">ليلة لو باقي ليلة</span>
+                            <span class="lang-en">Laylat law baqi laylatan</span>
+                        </h3>
+                    </div>
+                </a>
+
+                 <!-- Video Item 4 -->
+                <a href="https://drive.google.com/file/d/1GmkIV1okfQkWf6bDxADW6RNoirY9A6an/view?usp=drivesdk" target="_blank" class="relative group rounded-xl overflow-hidden shadow-lg aspect-video block bg-black border border-gold border-opacity-30 hover:border-opacity-100 transition-all">
+                    <img src="image/المقطوعات/4.png" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="text-white font-bold text-lg drop-shadow-md">
+                            <span class="lang-ar">مقطوعة رومنسيات</span>
+                            <span class="lang-en">Romances Piece</span>
+                        </h3>
+                    </div>
+                </a>
+
+                <!-- Video Item 5 -->
+                <a href="https://drive.google.com/file/d/17pitNljkJW84JKjrCVVORjgomx4vcpYB/view?usp=drivesdk" target="_blank" class="relative group rounded-xl overflow-hidden shadow-lg aspect-video block bg-black border border-gold border-opacity-30 hover:border-opacity-100 transition-all">
+                    <img src="image/المقطوعات/5.png" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 flex items-center justify-center">
+
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="text-white font-bold text-lg drop-shadow-md">
+                            <span class="lang-ar">صحاك الشوق</span>
+                            <span class="lang-en">Sihak alshawq</span>
+                        </h3>
+                    </div>
+                </a>
+
+                <!-- Video Item 6 -->
+                <a href="https://drive.google.com/file/d/1l0KGlxUdcX2n9buutZDZQu5sPX3qlmfQ/view?usp=drivesdk" target="_blank" class="relative group rounded-xl overflow-hidden shadow-lg aspect-video block bg-black border border-gold border-opacity-30 hover:border-opacity-100 transition-all">
+                    <img src="image/المقطوعات/6.png" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="text-white font-bold text-lg drop-shadow-md">
+                            <span class="lang-ar">بعيد عنك</span>
+                            <span class="lang-en">Baeid eank</span>
+                        </h3>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Contact Section -->
+    <section id="contact" class="py-24 bg-white dark:bg-darkBg relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-darkBrown text-softBeige rounded-3xl shadow-2xl p-10 md:p-14 relative overflow-hidden text-center border border-gold border-opacity-20">
+                
+                <!-- Background Decoration -->
+                <div class="absolute top-0 right-0 w-48 h-48 bg-gold rounded-full blur-[80px] opacity-30 translate-x-1/3 -translate-y-1/3"></div>
+                <div class="absolute bottom-0 left-0 w-48 h-48 bg-turquoise rounded-full blur-[80px] opacity-20 -translate-x-1/3 translate-y-1/3"></div>
+                
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gold drop-shadow-md">
+                        <span class="lang-ar">تواصل معنا</span><span class="lang-en">Contact Us</span>
+                    </h2>
+                    <p class="mb-12 text-gray-300 max-w-2xl mx-auto text-lg">
+                        <span class="lang-ar">نحن سعداء بتواصلكم معنا للحفلات والمناسبات والتعاون الفني. يسعدنا الاستماع إليكم!</span>
+                        <span class="lang-en">We are happy to connect with you for concerts, events, and artistic collaborations. We'd love to hear from you!</span>
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-start max-w-2xl mx-auto">
+                        
+                        <div class="flex items-center gap-5 group cursor-pointer bg-black bg-opacity-20 p-4 rounded-2xl hover:bg-opacity-40 transition-all border border-transparent hover:border-gold hover:border-opacity-30">
+                            <div class="w-14 h-14 rounded-full bg-gold bg-opacity-20 flex items-center justify-center text-gold text-2xl flex-shrink-0 group-hover:bg-gold group-hover:text-darkBrown transition-colors shadow-lg">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-gray-400 mb-1"><span class="lang-ar">الموقع</span><span class="lang-en">Location</span></h4>
+                                <p class="text-white text-md font-medium"><span class="lang-ar">اليمن، حضرموت، المكلا</span><span class="lang-en">Yemen, Hadramout, Mukalla</span></p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-5 group cursor-pointer bg-black bg-opacity-20 p-4 rounded-2xl hover:bg-opacity-40 transition-all border border-transparent hover:border-gold hover:border-opacity-30">
+                            <div class="w-14 h-14 rounded-full bg-gold bg-opacity-20 flex items-center justify-center text-gold text-2xl flex-shrink-0 group-hover:bg-gold group-hover:text-darkBrown transition-colors shadow-lg">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-gray-400 mb-1"><span class="lang-ar">الهاتف</span><span class="lang-en">Phone</span></h4>
+                                <p class="text-white text-md font-medium" dir="ltr">+967 700 000 000</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-5 group cursor-pointer bg-black bg-opacity-20 p-4 rounded-2xl hover:bg-opacity-40 transition-all border border-transparent hover:border-gold hover:border-opacity-30">
+                            <div class="w-14 h-14 rounded-full bg-gold bg-opacity-20 flex items-center justify-center text-gold text-2xl flex-shrink-0 group-hover:bg-gold group-hover:text-darkBrown transition-colors shadow-lg">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-gray-400 mb-1">WhatsApp</h4>
+                                <p class="text-white text-md font-medium" dir="ltr">+967 700 000 000</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-5 group cursor-pointer bg-black bg-opacity-20 p-4 rounded-2xl hover:bg-opacity-40 transition-all border border-transparent hover:border-gold hover:border-opacity-30">
+                            <div class="w-14 h-14 rounded-full bg-gold bg-opacity-20 flex items-center justify-center text-gold text-2xl flex-shrink-0 group-hover:bg-gold group-hover:text-darkBrown transition-colors shadow-lg">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-gray-400 mb-1"><span class="lang-ar">البريد الإلكتروني</span><span class="lang-en">Email</span></h4>
+                                <p class="text-white text-md font-medium">info@notesband.com</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Footer -->
+    <footer class="bg-darkBrown text-softBeige pt-16 pb-8 border-t-4 border-gold">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+                <!-- Logo & Desc -->
+                <div class="flex flex-col items-center md:items-start text-center md:text-start">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="الشعار.jpg" alt="Logo" class="h-12 w-auto rounded-full border border-gold" onerror="this.src='https://ui-avatars.com/api/?name=NB&background=18120F&color=C6A25A'">
+                        <span class="font-bold text-2xl text-gold tracking-wide">
+                            <span class="lang-ar">نوتس باند</span><span class="lang-en font-english">Notes Band</span>
+                        </span>
+                    </div>
+                    <p class="text-gray-400 max-w-sm text-sm leading-relaxed">
+                        <span class="lang-ar">تجمع موسيقي حضرمي يقدم التراث الأصيل برؤية عصرية تناسب جميع الأذواق.</span>
+                        <span class="lang-en">A Hadrami music collective presenting authentic heritage with a modern vision suitable for all tastes.</span>
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="flex flex-wrap justify-center gap-6 font-medium">
+                    <a href="#home" class="hover:text-gold transition"><span class="lang-ar">الرئيسية</span><span class="lang-en">Home</span></a>
+                    <a href="#about" class="hover:text-gold transition"><span class="lang-ar">عن الفرقة</span><span class="lang-en">About</span></a>
+                    <a href="#members" class="hover:text-gold transition"><span class="lang-ar">الأعضاء</span><span class="lang-en">Members</span></a>
+                    <a href="#gallery" class="hover:text-gold transition"><span class="lang-ar">المعرض</span><span class="lang-en">Media</span></a>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 border-opacity-50 pt-8 flex justify-center items-center text-center">
+                <p class="text-gray-400 text-sm font-medium tracking-wide">
+                    <span class="lang-ar">جميع الحقوق محفوظة &copy; 2026 فرقة نوتس باند</span>
+                    <span class="lang-en">Copyright &copy; 2026 Notes Band. All rights reserved.</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Mobile Menu Toggle with Animation ---
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            let isMenuOpen = false;
+
+            const toggleMenu = () => {
+                isMenuOpen = !isMenuOpen;
+                const icon = mobileMenuBtn.querySelector('i');
+                
+                if (isMenuOpen) {
+                    mobileMenu.classList.add('menu-open');
+                    icon.classList.replace('fa-bars', 'fa-times');
+                    icon.style.transform = 'rotate(90deg)';
+                } else {
+                    mobileMenu.classList.remove('menu-open');
+                    icon.classList.replace('fa-times', 'fa-bars');
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            };
+
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if(isMenuOpen) toggleMenu();
+                });
+            });
+
+            // --- Theme Toggle (Dark/Light) ---
+            const themeToggleBtn = document.getElementById('themeToggle');
+            const mobileThemeToggleBtn = document.getElementById('mobileThemeToggle');
+            
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.body.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.body.classList.remove('dark');
+            }
+
+            const toggleTheme = () => {
+                document.documentElement.classList.toggle('dark');
+                document.body.classList.toggle('dark');
+                localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            };
+
+            themeToggleBtn.addEventListener('click', toggleTheme);
+            mobileThemeToggleBtn.addEventListener('click', toggleTheme);
+
+            // --- Language Toggle (AR/EN) ---
+            const langToggleBtn = document.getElementById('langToggle');
+            const mobileLangToggleBtn = document.getElementById('mobileLangToggle');
+            const htmlElement = document.documentElement;
+
+            let currentLang = localStorage.getItem('lang') || 'ar';
+            
+            const applyLanguage = (lang) => {
+                if (lang === 'en') {
+                    htmlElement.lang = 'en';
+                    htmlElement.dir = 'ltr';
+                } else {
+                    htmlElement.lang = 'ar';
+                    htmlElement.dir = 'rtl';
+                }
+                localStorage.setItem('lang', lang);
+            };
+
+            applyLanguage(currentLang);
+
+            const toggleLanguage = () => {
+                currentLang = currentLang === 'ar' ? 'en' : 'ar';
+                applyLanguage(currentLang);
+            };
+
+            langToggleBtn.addEventListener('click', toggleLanguage);
+            mobileLangToggleBtn.addEventListener('click', toggleLanguage);
+
+            // --- Advanced Navbar Scroll Effects ---
+            const navbar = document.getElementById('navbar');
+            const navContainer = document.getElementById('navContainer');
+            const navLogo = document.getElementById('navLogo');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                let currentScrollY = window.scrollY;
+
+                // 1. Shrink and Shadow Effect on scroll
+                if (currentScrollY > 50) {
+                    navbar.classList.add('nav-scrolled');
+                    navContainer.classList.remove('h-20');
+                    navContainer.classList.add('h-16'); // Shrink height
+                    navLogo.classList.remove('h-12');
+                    navLogo.classList.add('h-10');     // Shrink logo slightly
+                } else {
+                    navbar.classList.remove('nav-scrolled');
+                    navContainer.classList.remove('h-16');
+                    navContainer.classList.add('h-20'); // Original height
+                    navLogo.classList.remove('h-10');
+                    navLogo.classList.add('h-12');
+                }
+
+                // 2. Smart Hide/Show Effect (Exit Effect)
+                if (currentScrollY > lastScrollY && currentScrollY > 150) {
+                    navbar.classList.add('nav-hidden'); // Scrolling down -> Hide
+                    if(isMenuOpen) toggleMenu(); // Close mobile menu if scrolling down
+                } else {
+                    navbar.classList.remove('nav-hidden'); // Scrolling up -> Show
+                }
+
+                lastScrollY = currentScrollY;
+            });
+        });
+    </script>
+</body>
+</html>
